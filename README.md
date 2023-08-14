@@ -12,7 +12,10 @@ API_URL=https://api.test.com/1,https://api.test.com/2
 ```
 
 ### Save User data to csv command
-`go run main.go save`
+`go run cmd/main.go save`
 
 ### Search User by tags
 `go run main.go search --tag=[tags]`
+
+### Run test
+`go test github.com/fahrurben/users-management-cli/internal`

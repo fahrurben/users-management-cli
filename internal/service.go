@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 )
@@ -69,7 +71,9 @@ func (service *Service) SaveUsers(users []User) error {
 		})
 	}
 
-	csvFile, err := os.Create("../data/users.csv")
+	_, b, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(b)
+	csvFile, err := os.Create(dir + "/../data/users.csv")
 	if err != nil {
 		return err
 	}
@@ -89,7 +93,9 @@ func (service *Service) SaveUsers(users []User) error {
 func (service *Service) SearchUsers(tags []string) ([]User, error) {
 	var users []User = make([]User, 0)
 
-	file, err := os.Open("../data/users.csv")
+	_, b, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(b)
+	file, err := os.Open(dir + "/../data/users.csv")
 	defer file.Close()
 
 	if err != nil {
