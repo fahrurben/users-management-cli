@@ -85,3 +85,35 @@ func (service *Service) SaveUsers(users []User) error {
 
 	return nil
 }
+
+func (service *Service) SearchUsers(tags []string) ([]User, error) {
+	var users []User = make([]User, 0)
+
+	file, err := os.Open("../data/users.csv")
+	defer file.Close()
+
+	if err != nil {
+		return users, err
+	}
+
+	r := csv.NewReader(file)
+	records, err := r.ReadAll()
+
+	for _, record := range records {
+		found := false
+		userTags := record[5]
+		for _, tag := range tags {
+			if strings.Contains(userTags, tag) {
+				found = true
+				break
+			}
+		}
+
+		if found {
+			user := User{Id: record[0], Balance: record[4]}
+			users = append(users, user)
+		}
+	}
+
+	return users, nil
+}

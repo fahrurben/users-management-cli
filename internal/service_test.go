@@ -131,3 +131,32 @@ func TestSaveUsers(t *testing.T) {
 	assert.Equal(t, "$2,633.92", record[4])
 	assert.Equal(t, "pariatur,qui,ea,culpa,laboris,laboris,minim", record[5])
 }
+
+func TestSearchUser(t *testing.T) {
+	urls := []string{
+		API_MOCK_1,
+		API_MOCK_2,
+	}
+
+	httpmock.Activate()
+	httpmock.RegisterResponder(
+		"GET",
+		API_MOCK_1,
+		httpmock.NewStringResponder(500, ""),
+	)
+
+	httpmock.RegisterResponder(
+		"GET",
+		API_MOCK_2,
+		httpmock.NewStringResponder(200, RESPONSE_MOCK),
+	)
+
+	users, err := service.GetUsers(urls)
+	assert.Nil(t, err)
+
+	err = service.SaveUsers(users)
+	assert.Nil(t, err)
+
+	results, err := service.SearchUsers([]string{"pariatur", "qui"})
+	assert.NotNil(t, results)
+}
